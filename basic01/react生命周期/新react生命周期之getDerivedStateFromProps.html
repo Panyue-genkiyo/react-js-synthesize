@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>getDerivedStateFromProps</title>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.js"></script>
+</head>
+<body>
+  <div id="test"></div>
+  <script type="text/babel">
+      //定义组件
+      class Count extends React.Component{
+      // //初始化状态
+      // state = {count:0}
+      /**
+      * forceUpdate()强制更新，即不更改状态(state)，组件也能帮你更新
+      * forceUpdate()强制更新只是比正常更新少了一个步骤，因为他不需要shouldComponentUpdate()开启阀门
+      * 流程 forceUpdate()--->componentWillUpdate()--->componentDidUpdate();
+      */
+
+      //测试生命周期钩子
+      //构造器
+      constructor(props) {
+      //构造器初始化一些状态
+        console.log('Count---constructor');
+        super(props);
+        this.state = {count:0};
+      }
+
+      // //调用时机：组件将要挂载
+      // componentWillMount(){
+      //   console.log('Count---componentWillMount')
+      // }
+
+        //新钩子getDerivedStateFromProps的使用(得到一个派生的状态)
+        //注意这个生命周期钩子不能给实例使用(此时并不是this.getDerivedStateFromProps调用的，因为这个钩子默认要你绑定在类的身上，也就是静态方法)
+        //另外注意这个钩子应该返回(状态对象,这里的状态对象应该与this.state的key属性保持一致)或者null
+        //getDerivedStateFromProps这个钩子默认可接受props参数，只要你给这个组件传递了参数，那么这个钩子可以在这里接收到
+        //同时getDerivedStateFromProps也可以接收到你初始化的状态this.state
+        /**
+          * 适用于 state 的值在任何时候都取决于 props
+          * 此时注意你在后面的修改(即试图用this.setState()去更改状态)是没有意义的，不会有效果
+          * 即state的值完全取决于props(从props得到派生的state，即props决定state(使用场景))
+          * 这个钩子的使用场景罕见，使用概率也低
+         */
+        static  getDerivedStateFromProps(props,state){
+           console.log('Count---getDerivedStateFromProps',props,state);
+            // return true;
+            // return null;
+            //返回状态对象
+           return props;//此时props得到的状态(注意这个状态不是你自己写的，而是从props哪里拿到的，所以说这里是派生状态)
+        }
+
+      //调用时机，组件刚一挂载完毕
+      componentDidMount(){
+          console.log('Count---componentDidMount')
+      }
+
+      //调用时机:组件将要被卸载时
+      componentWillUnmount(){
+        console.log('Count---componentWillUnmount');
+      }
+
+      //调用时机:组件刚一更新完毕的时候，即render方法在执行重新渲染组件之后马上
+      componentDidUpdate(){
+         console.log('Count---ComponentDidUpdate');
+      }
+
+
+      //调用时机:更改完状态(setState)之后首次会调用的函数钩子，阀门
+      //如果你没有写该钩子，底层react会默认给你补一个，且返回真(true);
+      //但你写了，你一定要显式返回boolean值(true or false),不返回默认返回undefined，就会产生错误，以至于走不下去
+      shouldComponentUpdate(){
+        console.log('Count---shouldComponentUpdate');
+        return true;
+      //return false;//代表阀门关闭，将无法走到render()处，也就无法更新页面
+      }
+
+      // //(代表组件将要更新)调用时机：当shouldComponentUpdate返回true时，阀门开启的下一步
+      // componentWillUpdate(){
+      // console.log('Count---componentWillUpdate');
+      // }
+
+      //组件挂载之后
+      render(){
+          console.log('Count---render');
+          const {count} = this.state;
+         return (
+            <div>
+             <h2>当前求和为:{count}</h2>
+             <button onClick={this.add}>点我加1</button>
+             <button onClick={this.death}>卸载组件</button>
+             <button onClick={this.force}>不更改任何状态中的数据，强制更新</button>`
+           </div>
+         );
+      }
+
+      force = () => {
+          this.forceUpdate();
+      }
+
+      add = () => {
+        //更新状态哦
+        const {count} = this.state;
+        this.setState({count: count+1});
+        //更新状态之后在生命周期中首先应该调用shouldComponentUpdate(默认返回true，即改变`状态之后会更新页面去调用render)(类似的一个阀门)，再其次componentWillUpdate.之后才是render
+      }
+      //清除组件
+      //卸载组件的回调
+       death = () => {
+         ReactDOM.unmountComponentAtNode(document.getElementById('test'));
+        }
+      }
+      //渲染组件到页面
+      ReactDOM.render(<Count count={199}/>,document.getElementById('test'));
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>key的作用</title>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.js"></script>
+</head>
+<body>
+    <div id="test"></div>
+    <script type="text/babel">
+
+        /**
+         * 慢动作回放，如果使用索引值index作为key
+         *
+         * 数据:
+         *     {id:1,name:'小张',age:18},
+               {id:2,name:'小李',age:19},
+            初始虚拟dom:
+                <li key=0>小张--->18岁</li>
+                <li key=1>小李--->19岁</li>
+            更新后的数据
+                {id:3,name:'小王',age:20}
+                {id:1,name:'小张',age:18},
+                {id:2,name:'小李',age:19},
+            更新数据后的虚拟dom:
+                <li key=0>小王--->20岁</li>
+                <li key=1>小张--->18岁</li>
+                <li key=2>小李--->19岁</li>
+              此时更新后的虚拟dom要和更新前的虚拟dom做比较(比较规则):
+                     a.旧虚拟DOM中找到了与新虚拟DOM相同的key:
+                         1.若虚拟DOM中的内容没有改变，则直接使用之前的真实DOM
+                         2.若虚拟DOM中内容变了，则生成新的真实DOM，随后替换掉页面中之前的真实DOM
+                     b.旧虚拟DOM中未找到与新虚拟DOM的key
+                         根据数据创建新的真实DOM，随后渲染到页面上
+
+        -----------------------------------------------
+         慢动作回放，如果使用数据的唯一标识id作为key
+         *
+         * 数据:
+         *      {id:1,name:'小张',age:18},
+                {id:2,name:'小李',age:19},
+           初始虚拟dom:
+                <li key=1>小张--->18岁</li>
+                <li key=2>小李--->19岁</li>
+           更新后的数据
+               {id:3,name:'小王',age:20}
+               {id:1,name:'小张',age:18},
+               {id:2,name:'小李',age:19},
+           更新数据后的虚拟dom:
+                <li key=3>小王--->20岁</li>
+                <li key=1>小张--->18岁</li>
+                <li key=2>小李--->19岁</li>
+         */
+
+
+        class Person extends React.Component{
+
+            state = {
+                persons:[
+                    {id:1,name:'小张',age:18},
+                    {id:2,name:'小李',age:19},
+                ]
+            }
+
+            render(){
+                return(
+                  <div>
+                      <h2>展示人员信息</h2>
+                      <button onClick={this.addW}>添加一个小王</button>
+                      <h3>使用index索引值作为key</h3>
+                      <ul>
+                          {this.state.persons.map((p,index)=>{
+                              return <li key={index}>{p.name}--->{p.age}岁 <input type="text"/> </li>
+                          })}
+                      </ul>
+                      <hr/>
+                      <h3>使用person数据唯一标识id索引值作为key</h3>
+                      <ul>
+                          {this.state.persons.map((p)=>{
+                              return <li key={p.id}>{p.name}--->{p.age}岁 <input type="text"/> </li>
+                          })}
+                      </ul>
+                  </div>
+                );
+            }
+
+            addW = () => {
+                const {persons} = this.state;
+                this.setState({persons:[{id:persons.length+1,name:'小王',age:20},...persons]});
+            }
+        }
+
+        ReactDOM.render(<Person/>,document.getElementById('test'));
+    </script>
+</body>
+</html>

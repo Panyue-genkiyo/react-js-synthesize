@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>类式组件</title>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.js"></script>
+</head>
+<body>
+  <!--容器-->
+   <div id="text">
+
+   </div>
+   <script type="text/babel">
+      //类式组件
+      //类式组件要能使用必须继承React.Component组件
+      //render()方法必须得写，且还要有返回值
+      /**
+       * 注意点
+       * render()放在Mycom的原型对象,供实例使用(组件实例对象)
+       */
+      class Mycom extends React.Component{
+         render(){
+           console.log('render中的this',this);
+           return(
+                   <div>hello world</div>
+           );
+         }
+      }
+      //这两个render不一样
+      /**
+       * 你在这里写了<Mycom/>组件后，react帮你自动初始化一个Mycom类的实例，并通过该实例调用到原型上的render方法
+       * 将render返回的虚拟dom转换为真实dom
+       * render中的this是Mycom的实例对象
+       */
+      ReactDOM.render(<Mycom/>,document.getElementById("text"));
+   </script>
+</body>
+</html>

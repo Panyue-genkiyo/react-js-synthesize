@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数柯里化01</title>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.js"></script>
+</head>
+<body>
+<div id="test"></div>
+<script type="text/babel">
+  //创建组件
+  //页面整体不刷形获取数据(组织页面数据)
+  //受控组件并不是现用现取
+  //受控组件：随着输入维护状态，而不需要过于依赖ref
+  class Login extends React.Component{
+    //初始化状态
+    state = {
+      username:'',//用户名
+      password:''//密码
+    };
+
+    render(){
+      // console.log(this);
+        // onChange={this.saveFormData('username')}这种写法就不叫回调函数了是别人已经帮你调用好了
+        //这样写意思是你将this.saveFormData的返回值交给了onchange做回调。(除非你在这个函数里面再返回一个函数,这样就是对的)
+        //正确的回调函数写法就是{this.函数名}不要加小括号，一定注意这个问题
+        //反正你一定要交给react 它要使是一个函数
+      return(
+              <form action="https://www.baidu.com" onSubmit={this.handle} >
+                用户名:<input onChange={this.saveFormData('username')} type="text" id="username" name="username" required/>
+                密码:<input onChange={this.saveFormData('password')} type="password" id="password" name="password" required/>
+                <button>登陆</button>
+              </form>
+      )
+    }
+    //event是正在发生事件的dom对象
+    handle = (event) => {
+      //提示数据
+      event.preventDefault();//阻止默认提交
+      //取出state中的数据
+      const {username,password} = this.state;
+      alert(`username:${username},password:${password}`);
+    }
+
+    //保存表单数据到状态中
+    //高阶函数
+      /**
+       * 如果一个函数复合下面2个规范中的任何一个，那该函数就是高阶函数
+       *   一个函数的接收参数是一个函数，那么他就是高阶函数
+       *   一个函数调用的返回值依然是一个函数，那么它就是一个高阶的函数
+       *   函数的柯里化：通过函数调用继续返回函数的方式，实现接收多次接收参数最后统一处理的函数编码形式
+        *  常见的高阶函数:Promise, setTimeOut,arr.map()等等(数组身上的大部分方法)
+       */
+    saveFormData = (dataType) =>{
+        //箭头函数，不会丢失this
+        //交给交给onchange回调
+       return (event) => {
+           //此时react帮你调这个函数
+           //传入event参数，这个参数代表正在产生事件的哪个真实的dom对象，这里存在着闭包
+           // console.log(dataType,event.target.value);
+           //[注意:方括号读变量]
+           this.setState({[dataType]:event.target.value})
+       }
+    }
+
+    // //onchange事件只要一改变就触发该回调函数
+    // saveUsername = (event) => {
+    //   //获取该input的每时做出改变的值
+    //   const {target} = event;
+    //   //此时将该值放在状态中
+    //   //每次更改状态，都会刷新页面，调用render函数
+    //   this.setState({username:target.value});
+    // }
+    //
+    // savePassword = (event) => {
+    //   //获取该input的每时做出改变的值
+    //   const {target} = event;
+    //   //此时将该值放在状态中
+    //   //每次更改状态，都会刷新页面，调用render函数
+    //   this.setState({password:target.value});
+    // }
+  }
+  //渲染组件
+  ReactDOM.render(<Login/>,document.getElementById("test"));
+</script>
+</body>
+</html>
