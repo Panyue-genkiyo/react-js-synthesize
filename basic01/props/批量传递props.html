@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量传递props</title>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.js"></script>
+</head>
+<body>
+     <div id="test"></div>
+     <script type="text/babel">
+        class Person extends React.Component{
+            //要对传递的标签属性进行类型的限制
+            //进行必要性的限制
+            //属性指定默认值
+          render(){
+            const {name,age,sex} = this.props;
+            return(
+                    <ul>
+                      <li>姓名:{name}</li>
+                      <li>性别:{sex}</li>
+                      <li>年龄:{age}</li>
+                    </ul>
+            )
+          }
+        }
+        //标签属性
+        const p = {name:'panyue',age:21,sex:'男'};
+        //这里可以允许你...p展开对象，但其仅仅适用于传递参数的时候可以这么使用
+        ReactDOM.render(<Person {...p}/>,document.getElementById("test"));
+        ReactDOM.render(<Person name='pu' age={19} sex='男'/>,document.getElementById("test"));
+     </script>
+</body>
+</html>
