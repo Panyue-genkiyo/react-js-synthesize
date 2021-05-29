@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsx小练习</title>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.js"></script>
+</head>
+<body>
+  <div id="test">
+
+  </div>
+  <script type="text/babel">
+      //动态显示链表
+      // 当你传递数组给react，则其会自动帮你遍历该数组
+      const arr = ['react','angular','vue'];
+      //对象类型的数据是不能直接传递给react的，会报错(不是合法的节点)
+      // const obj = {
+      //     name1:"react",
+      //     name2:"angular",
+      //     name3:"vue"
+      // }
+      //{}中只能写表达式
+      /*
+         一定区分就是语句和js表达式
+         一个表达式会产生一个值，可以放在任何需要值的地方
+            以下都是表达式
+             (1). a
+             (2). a+b
+             (3) demo(1) 无返回值就是undefined
+             (4) arr.map(),map方法是有返回值的
+             (5)function test(){} -->有返回值的
+           语句或代码
+             (1).if else if else
+             (2).for() while() do while
+             (3) switch case
+       */
+      // <!--这里每个li必须要有不同的key值，如果没有则会报错-->
+      const VDom = (
+          <div>
+              <h1>前端js框架列表</h1>
+              <ul>
+                  {arr.map((value,index) => {
+                      return <li key={index}>{value}</li>;
+                  })}
+              </ul>
+          </div>
+      );
+      //渲染dom
+      ReactDOM.render(VDom,document.getElementById("test"));
+  </script>
+</body>
+</html>

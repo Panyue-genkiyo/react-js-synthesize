@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>createRef的使用</title>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.js"></script>
+</head>
+<body>
+    <div id="test"></div>
+    <script type="text/babel">
+      /**
+       * 官网ref回调的案例
+       */
+      // class CustomTextInput extends React.Component {
+      //   constructor(props) {
+      //     //接收props参数
+      //     super(props);
+      //     this.textInput = null;//绑定属性
+      //     this.setTextInputRef = element => {
+      //       this.textInput = element;//绑定到类上class ref上
+      //     };
+      //
+      //     this.focusTextInput = () => {
+      //       // 使用原生 DOM API 使 text 输入框获得焦点
+      //       if (this.textInput) this.textInput.focus();//点击之后会触发的函数
+      //     };
+      //   }
+      //
+      //   componentDidMount() {
+      //     // 组件挂载后，让文本框自动获得焦点
+      //     this.focusTextInput();
+      //   }
+      //
+      //   render() {
+      //     console.log(this);
+      //     // 使用 `ref` 的回调函数将 text 输入框 DOM 节点的引用存储到 React
+      //     // 实例上（比如 this.textInput）
+      //     return (
+      //             <div>
+      //               <input
+      //                       type="text"
+      //                       ref={this.setTextInputRef}
+      //               />
+      //               <input
+      //                       type="button"
+      //                       value="Focus the text input"
+      //                       onClick={this.focusTextInput}
+      //               />
+      //             </div>
+      //     );
+      //   }
+      // }
+      class Demo extends React.Component{
+        //给某个标签加上了ref属性的化react就会把这个ref的值添加到实例对象的refs对象(key-->被指代的标签名，value--->ref的值)去
+        //就比如下面的例子 refs={input1:input}
+        //ref设置标识
+        //回调函数的ref(回调函数不是你调，而是后面有人帮你调用)
+        /**
+         *  ref={(a)=>{this.input1 = a}}
+         *  实例自动调用该回调函数，并将你ref所在的节点也就是这个实际存在的input作为参数传入到该回调函数中
+         *  也就是说你现在的实例this上就存在了一个名为input1的属性，值为刚才存在的真实的input
+         */
+        /**
+         * React.createRef调用后可以返回一个容器，该容器可以存储被ref所标识的节点
+         * 例如下面的实例，它会把input直接放入createRef所制造的容器
+         * 但注意该容器是专人专用的，只能存一个(后面的存放的会踢掉的前面的存放的)
+         * */
+        myRef1 = React.createRef();//类似于在构造器中直接this.myRef = function(){}....
+        myRef2 = React.createRef();
+        render(){
+          return (
+              <div>
+                  <input  ref={this.myRef1} type={"text"} placeholder="点击按钮提示数据" style={{marginRight:"10px"}}/>
+                  <button  onClick={this.showDate}>点我提示左侧的数据</button>
+                  <input  ref={this.myRef2} onBlur={this.showDate2} type={"text"} placeholder="失去焦点提示数据" style={{marginLeft:"10px"}}/>
+              </div>
+          )
+        }
+
+        /**
+         * 箭头函数this指向不丢
+         */
+        showDate = () => {
+          // console.log("sss");
+          // const input1 = document.getElementById("input1");
+          // alert(input1.value);
+          // const {input1} = this.refs;
+          // alert(input1.value);
+          //此时你拿到的是真实dom 就是哪个input真实节点
+          const {current} = this.myRef1;
+          console.log(current.value);
+        }
+
+        showDate2 = () => {
+          // const {input2} = this.refs;
+          // alert(input2.value);
+          const {current} = this.myRef2;
+          console.log(current.value)
+        }
+
+      }
+      ReactDOM.render(<Demo/>,document.getElementById("test"));
+    </script>
+</body>
+</html>

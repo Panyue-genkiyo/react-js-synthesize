@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>state组件的理解</title>
+    <script src="../js/react.development.js"></script>
+    <script src="../js/react-dom.development.js"></script>
+    <script src="../js/babel.js"></script>
+</head>
+<body>
+   <div id="test"></div>
+   <script type="text/babel">
+      //类组件(组件实例对象的)三大核心 state props ref
+      /**
+       * state(状态)
+       */
+      const id = "title";
+      // let that;
+      class Weather extends React.Component{
+        //借助构造器初始化state的值
+        //constructor运行一次
+        constructor() {
+          console.log("constructor")
+          // super(props);
+          super();
+          this.state = {isHot:false,wind:"微风"};//state的值是对象(一系列的状态)(一个state可能有多个值)
+          //数据放在状态中，通过状态改变展现(状态驱动展示)
+          // that = this;//保留this，让外层的demo可获取到this
+          this.changeWeather = this.changeWeather.bind(this);//返回了绑定this(这个this就是该实例对象)
+          //此时实例上就有一个changeWeather属性，握着this为该实例对象的新函数changeWeather
+        }
+        //render调用1+n次，n是你点击的次数
+        render(){
+          console.log("render")
+          console.log(this);
+          // console.log(this);//组件实例对象
+          const {isHot,wind} = this.state;//解构赋值
+          return (
+                  //读取状态并进行展示
+                  //一定不能写成onClick={demo()}，这里就代表把demo函数的的执行值返回给了onClick
+                  //react绑定事件的的方式
+                  <h1 id={id} onClick={this.changeWeather}>今天天气{isHot?'炎热':'凉爽'},{wind}</h1>
+          )
+        }
+        /**
+         * changeWeather函数放在该类的原型对象即(Weather.prototype)
+         * 此时changeWeather中的this就是该类实例化的后的对象
+         * 通过weather实例调用changeWeather时，changeWeather中的this就是该weather实例
+         */
+        //调用次数：你点几次就运行几次
+        changeWeather(){
+          console.log("changeWeather")
+          // console.log('此处修改isHot的值');
+          //由于changeWeather是作为onclick的回调，所以不是实例调用changeWeather而是直接调用
+          //类中的方法默认开启了局部的严格模式，所以this是undefined
+          const {isHot} = this.state;//此处this是undefined，这里会报错
+          // console.log(isHot);
+          //this.state.isHot = !isHot;
+          //state状态的值不能之间改变只能靠this.setState来设置(且这个设置是合并不是替换)
+          this.setState({isHot:!isHot});
+          // console.log(this.state.isHot);
+        }
+      }
+      // function demo(){
+      //   console.log('此处修改isHot的值');
+      //   const {isHot} = this.state;//此处this是undefined，这里会报错
+      //   console.log(isHot);
+      // }
+      //渲染组件到页面
+      ReactDOM.render(<Weather/>,document.getElementById("test"));
+      /**
+       * 尽量不实用这种方法
+       */
+      // const title = document.getElementById(id);
+      // title.addEventListener('click',()=>{
+      //   console.log('标题被点击了');
+      // })
+   </script>
+</body>
+</html>
