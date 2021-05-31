@@ -1,5 +1,6 @@
 import React from 'react';
 import {inject,observer} from 'mobx-react';
+import './index.css';
 
 /**
  * 测试
@@ -10,7 +11,7 @@ import {inject,observer} from 'mobx-react';
 
 const Todolist = ({todos}) => {
 
-    const {addTodo,deleteTodo,searchTodo,completeTodo} = todos;
+    const {addTodo,deleteTodo,searchTodo,completeTodo,setSearchWord} = todos;
 
     // console.log(addTodo);
     const change = (event) => {
@@ -27,10 +28,14 @@ const Todolist = ({todos}) => {
                 <h1>todoApp demo</h1>
                 <div style={{marginBottom:'10px'}}>
                     <label  htmlFor='todo'>新建事项:</label>
-                    <input type='text' id='todo' onKeyUp={(e) => change(e)}/>
+                    <input type='text' id='todo'  onFocus={() => {setSearchWord('');}} onKeyUp={(e) => {
+                        change(e);
+                    }}/>
                     &nbsp;
                     <label htmlFor='searchTodo'>查找相应代办事项:</label>
-                    <input type='text' id='searchTodo' onChange={(e) => {searchTodo(e.target.value)}} onBlur={(e)=> {e.target.value = '';todos.searchWord = ''}}/>
+                    <input type='text' id='searchTodo' onChange={(e) => {
+                        searchTodo(e.target.value);
+                    }} onBlur={(e)=> {e.target.value = '';}}/>
                 </div>
                 <div>
                     Completed:{todos.completed}
@@ -44,7 +49,10 @@ const Todolist = ({todos}) => {
                                 {todo.complete ? '[✔︎]':'[✖︎]'}
                                 {todo.content}
                                 &nbsp;&nbsp;&nbsp;
-                                <button onClick={() => {deleteTodo(todo.id)}}>
+                                <button onClick={() => {
+                                    // console.log(todo.content);
+                                    deleteTodo(todo.id)}}
+                                >
                                     删除这个事项
                                 </button>
                                 &nbsp;
@@ -57,11 +65,15 @@ const Todolist = ({todos}) => {
                                 {sdo.complete ? '[✔︎]':'[✖︎]'}
                                 {sdo.content}
                                 &nbsp;&nbsp;&nbsp;
-                                <button onClick={() => {deleteTodo(sdo.id)}}>
+                                <button onClick={() => {
+                                    // console.log('sdo delete');
+                                    // console.log(sdo.content);
+                                    deleteTodo(sdo.id);
+                                }}>
                                     删除这个事项
                                 </button>
                                 &nbsp;
-                                {!sdo.complete&&<button onClick={() => {completeTodo(sdo.id)}}>
+                                {!sdo.complete&& <button onClick={() => {completeTodo(sdo.id)}}>
                                     完成
                                 </button>}
                             </li>
