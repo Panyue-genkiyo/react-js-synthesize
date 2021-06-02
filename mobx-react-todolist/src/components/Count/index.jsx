@@ -1,6 +1,7 @@
 import React from 'react';
 import {inject,observer} from 'mobx-react'
 
+//已完成
 
 const Count = ({count}) => {
     // console.log(count);

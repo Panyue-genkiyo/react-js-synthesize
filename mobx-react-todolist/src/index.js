@@ -5,11 +5,14 @@ import App from './App';
 import {Provider} from 'mobx-react'
 import store from "./store";
 import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from 'react-router-dom'
 
 ReactDOM.render(
   <React.StrictMode>
       <Provider {...store}>
-          <App />
+          <BrowserRouter>
+              <App />
+          </BrowserRouter>
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')

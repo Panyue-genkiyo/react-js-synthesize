@@ -20,15 +20,13 @@ class TodoState{
         });
     }
 
-
-    // @action
-    // changeSearchWord = (str) => {
-    //     this.searchWord = str;
-    // }
-
+    @action
+    setSdo = () => {
+        this.sdo.length = 0;
+    }
 
     @action
-    setSearchWord = (str) => {
+    setSearchWord =  (str) => {
         this.searchWord = str;
     }
 
@@ -37,12 +35,14 @@ class TodoState{
         console.log('删除');
         this.todos = this.todos.filter(todo => todo.id !== id);
         // console.log(this.todos);
+        console.log(this.sdo);
         // if(this.sdo.length){
         //     this.sdo.length = 0;
         // }
+        this.setSdo();
         this.setSearchWord('');
         //console.log(this.sdo.length);
-        // this.sdo.length = 0;
+        // this.setSdo();
     }
 
     @computed get completed(){
@@ -56,6 +56,7 @@ class TodoState{
     @action
     searchTodo = (content) => {
         let con = content.trim();
+        console.log('search',con)
         let index1 = con.indexOf('\\');
         let index2 = con.indexOf('[');
         // console.log('index',index);
@@ -66,7 +67,8 @@ class TodoState{
         // console.log(this.sdo);
         // console.log('sdo length:',this.sdo.length);
         if(!con) {
-            this.sdo.length = 0;
+            // this.sdo.length = 0;
+            this.setSdo();
             // console.log('搜索字符串已为空');
             // console.log('sdo length:',this.sdo.length);
         }
@@ -79,6 +81,7 @@ class TodoState{
     completeTodo = (id) => {
         let todo = this.todos.find((todo) => todo.id === id);
         todo.complete = !todo.complete;
+        this.setSdo();
         this.setSearchWord('');
     }
 }

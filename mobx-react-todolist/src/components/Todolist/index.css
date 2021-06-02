@@ -1,3 +1,19 @@
 li{
     margin-top: 10px;
 }
+
+.link {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: #61dafb;
+    padding: 8px 6px;
+}
+
+.ac{
+    color: white;
+    background-color: salmon;
+}
+
