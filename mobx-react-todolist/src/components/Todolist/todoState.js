@@ -26,7 +26,7 @@ class TodoState{
     }
 
     @action
-    setSearchWord =  (str) => {
+    setSearchWord = (str) => {
         this.searchWord = str;
     }
 
@@ -35,7 +35,7 @@ class TodoState{
         console.log('删除');
         this.todos = this.todos.filter(todo => todo.id !== id);
         // console.log(this.todos);
-        console.log(this.sdo);
+        // console.log(this.sdo);
         // if(this.sdo.length){
         //     this.sdo.length = 0;
         // }
