@@ -47,16 +47,15 @@ const Todolist = ({todos}) => {
                                onFocus={() => {history.push("/")}}/>
                     </div>
                 </div>
-                <div>
-                    已完成:{todos.completed}
-                    &nbsp;&nbsp;
-                    未完成:{todos.uncompleted}
-                </div>
+                {todos.todos.length !== 0 ? <div className={'space-x-4 mb-3'}>
+                    <span>已完成:{todos.completed}</span>
+                    <span>未完成:{todos.uncompleted}</span>
+                </div>:<div> </div>}
                 <div className={'border-2 px-4 py-6 space-y-3'}>
                     {todos.todos.length === 0 ? <h3>没有代办事项，赶紧去添加一条吧</h3> : <h3>您的待办事项</h3>}
                             {todos.sdo.length ? (!todos.searchWord ? <F con={todos.todos} t={todos}/> : <F con={todos.sdo} t={todos}/>)
                                 :
-                            (todos.searchWord ? (todos.todos.length !== 0 && <h3>没有找到你想要的事项</h3>) : <F con={todos.todos} t={todos}/>)}
+                            (todos.searchWord ? (todos.todos.length !== 0 ? <h3>没有找到你想要的事项</h3> : <div> </div>) : <F con={todos.todos} t={todos}/>)}
                 </div>
             </div>
         </div>
