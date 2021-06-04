@@ -1,20 +1,10 @@
 import React from 'react';
 import {inject,observer} from 'mobx-react';
 import {useHistory} from 'react-router-dom'
-import './index.css';
 import {NavLink,Route} from 'react-router-dom';
-import Completed from "./Completed";
-import UnCompleted from "./UnCompleted";
-
-/**
- * 测试
- */
-// const content = '你'
-// const  reg = new RegExp(`${content}`).test('你好');
-// console.log(reg);
+import './index.css';
 
 const Todolist = ({todos}) => {
-
     const {addTodo,searchTodo,setSdo,setSearchWord} = todos;
     const history = useHistory();
     // console.log(addTodo);
@@ -25,7 +15,6 @@ const Todolist = ({todos}) => {
             event.target.value = ''
         }
     }
-
     return (
         <div>
             <div>
@@ -33,10 +22,10 @@ const Todolist = ({todos}) => {
                 <NavLink to='/complete' className='link' activeClassName='ac'>已完成的事项</NavLink>
                 <NavLink to='/uncomplete' className='link' activeClassName='ac'>未完成的事项</NavLink>
                 <Route path={'/complete'}>
-                  <Completed todos={todos}/>
+                    <CompletedOrUnCompleted todos={todos} completed={true}/>
                  </Route>
                 <Route path={'/unComplete'}>
-                    <UnCompleted todos={todos}/>
+                    <CompletedOrUnCompleted todos={todos} completed={false}/>
                 </Route>
                 <div style={{marginBottom:'10px'}}>
                     <label  htmlFor='todo'>新建事项:</label>
@@ -56,9 +45,9 @@ const Todolist = ({todos}) => {
                        onFocus={() => {history.push("/")}}/>
                 </div>
                 <div>
-                    Completed:{todos.completed}
+                    已完成:{todos.completed}
                     &nbsp;&nbsp;
-                    Uncompleted:{todos.uncompleted}
+                    未完成:{todos.uncompleted}
                 </div>
                 <div>
                             {todos.sdo.length ? (!todos.searchWord ? <F con={todos.todos} t={todos}/> : <F con={todos.sdo} t={todos}/>)
@@ -70,7 +59,7 @@ const Todolist = ({todos}) => {
     );
 };
 
-export const F = (props) => {
+const F = (props) => {
     let {con,t} = props;
     const {deleteTodo,completeTodo} = t;
     return (
@@ -91,6 +80,27 @@ export const F = (props) => {
             ))}
         </ul>
     )
+}
+
+
+//封装
+const CompletedOrUnCompleted = ({todos,completed}) => {
+    let completeTodos = todos.todos.filter(todo => todo.complete === completed);
+    return (
+           (todos.todos.length === 0 ? <h3>没有代办事项，赶紧去添加一条吧</h3>:(completeTodos.length !== 0 ?
+                    <div>
+                      <F con={completeTodos} t={todos}/>
+                    </div>:
+                    (completed ? <div>
+                                   <h3>加油哦～您的待办事项一件也还没完成</h3>
+                                 </div> :
+                                 <div>
+                                   <h3>真棒！您的待办事项都已完成了！！</h3>
+                                 </div>
+                    )
+               )
+           )
+    );
 }
 
 export default inject('todos')(observer(Todolist));
