@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>批量传递props</title>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.js"></script>
+  <!--引入prop-types用于对组件标签属性进行限制-->
+  <script src="../js/prop-types.js"></script>
+</head>
+<body>
+<div id="test1"></div>
+<div id="test2"></div>
+<script type="text/babel">
+  /**
+   * 此时需要给组件自身添加限制规则
+   */
+  class Person extends React.Component{
+    //要对传递的标签属性进行类型的限制
+    //进行必要性的限制
+    //属性指定默认值
+    //props是只读的，不想state(状态)一样可以改
+    render(){
+      const {name,age,sex} = this.props;
+      //this.props.name = 'sl';///props只读，出现错误
+      return(
+              <ul>
+                <li>姓名:{name}</li>
+                <li>性别:{sex}</li>
+                <li>年龄:{age+1}</li>
+              </ul>
+      )
+    }
+  }
+  //给类组件标签属性加上规则则要用类组件.propTypes;
+  Person.propTypes = {
+     name:PropTypes.string.isRequired,//限制name为字符串,且必填
+     sex:PropTypes.string,
+     age:PropTypes.number,
+     speak:PropTypes.func //限制speak必须是function(即函数)类型
+  }
+  //指定默认的标签属性值
+  Person.defaultProps = {
+    sex:'男',//没有传递sex就它一个默认值
+    age:18 //默认年龄18
+  }
+  //标签属性
+  const p = {name:'panyue',age:21,sex:'男'};
+  //这里可以允许你...p展开对象，但其仅仅适用于传递参数的时候可以这么使用
+  ReactDOM.render(<Person {...p}/>,document.getElementById("test1"));
+  ReactDOM.render(<Person  name="jerry" speak={speak}/>,document.getElementById("test2"));
+
+  function speak(){
+    console.log("说话");
+  }
+</script>
+</body>
+</html>
